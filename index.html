@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Mata Sehat - Media Belajar IPA SD Kelas 3</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka (Judul Ramah Anak) & Nunito (Teks Mudah Dibaca) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        skysoft: '#F0F9FF',
+                        sunshine: '#FBBF24',
+                        mint: '#10B981',
+                        coral: '#F43F5E',
+                        ocean: '#0284C7',
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-short': 'bounce 0.6s ease-in-out 2',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F0F9FF;
+            background-image: url('https://i.ibb.co.com/hRLPs94z/Latar-Belajar-Ceria-Bertema-Sekolah.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+        /* Custom scrollbar untuk navigasi horizontal di HP */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Efek tombol 3D ramah anak */
+        .btn-3d {
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18);
+        }
+        .btn-3d:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+        }
+        /* Hotspot berdenyut pada gambar mata */
+        .hotspot-dot {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .hotspot-dot:hover {
+            transform: scale(1.18);
+        }
+        /* Animasi garis cahaya pada simulasi */
+        @keyframes dashFlow {
+            to {
+                stroke-dashoffset: -24;
+            }
+        }
+        .light-ray {
+            stroke-dasharray: 6 6;
+            animation: dashFlow 0.8s linear infinite;
+        }
+        /* Confetti sederhana */
+        .confetti-piece {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            z-index: 9999;
+            pointer-events: none;
+            animation: confettiFall 2.8s linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER UTAMA -->
+    <header class="bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between gap-2">
+            <!-- Logo & Judul -->
+            <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('beranda')">
+                <div class="w-10 h-10 sm:w-11 sm:h-11 bg-white rounded-2xl flex items-center justify-center shadow-md shrink-0">
+                    <!-- Ikon Mata Ceria SVG -->
+                    <svg viewBox="0 0 64 64" class="w-8 h-8">
+                        <ellipse cx="32" cy="32" rx="28" ry="18" fill="#E0F2FE" stroke="#0284C7" stroke-width="4"/>
+                        <circle cx="32" cy="32" r="12" fill="#0284C7"/>
+                        <circle cx="32" cy="32" r="6" fill="#0F172A"/>
+                        <circle cx="28" cy="28" r="3" fill="#FFFFFF"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-xl font-bold leading-tight tracking-wide">Petualangan Mata Sehat</h1>
+                    <p class="text-xs text-sky-100 font-semibold">IPA SD Kelas 3 • Mengenal Indra Penglihatan</p>
+                </div>
+            </div>
+
+            <!-- Kontrol Suara & Skor Bintang -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 text-sm font-bold border border-white/30" title="Total Bintang Kamu">
+                    <span class="text-amber-300 text-base">⭐</span>
+                    <span id="total-stars">0</span>
+                </div>
+                <button id="btn-sound" onclick="toggleSound()" class="bg-white/20 hover:bg-white/30 active:scale-95 p-2 rounded-full transition border border-white/30" title="Aktifkan/Matikan Efek Suara" aria-label="Suara">
+                    <span id="sound-icon" class="text-lg leading-none">🔊</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- NAVIGASI UTAMA (Responsif HP & Laptop) -->
+        <nav class="bg-white/95 backdrop-blur text-slate-700 border-b border-sky-100 shadow-sm">
+            <div class="max-w-6xl mx-auto px-2 sm:px-6">
+                <div id="nav-tabs" class="flex items-center justify-start md:justify-center gap-1.5 sm:gap-2 py-2 overflow-x-auto no-scrollbar">
+                    <button data-tab="beranda" onclick="navigateTo('beranda')" class="nav-btn shrink-0 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition">
+                        <span>🏠</span> Beranda
+                    </button>
+                    <button data-tab="tujuan" onclick="navigateTo('tujuan')" class="nav-btn shrink-0 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition">
+                        <span>🎯</span> Tujuan
+                    </button>
+                    <button data-tab="materi" onclick="navigateTo('materi')" class="nav-btn shrink-0 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition">
+                        <span>📖</span> Materi
+                    </button>
+                    <button data-tab="simulasi" onclick="navigateTo('simulasi')" class="nav-btn shrink-0 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition">
+                        <span>🔬</span> Simulasi
+                    </button>
+                    <button data-tab="gim" onclick="navigateTo('gim')" class="nav-btn shrink-0 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition">
+                        <span>🎮</span> Gim (3 Misi)
+                    </button>
+                    <button data-tab="kuis" onclick="navigateTo('kuis')" class="nav-btn shrink-0 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition">
+                        <span>📝</span> Kuis
+                    </button>
+                    <button data-tab="refleksi" onclick="navigateTo('refleksi')" class="nav-btn shrink-0 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition">
+                        <span>🌟</span> Refleksi
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- NOTIFIKASI TOAST RAMAH ANAK (Pengganti alert) -->
+    <div id="toast-box" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 translate-y-4 w-[92%] max-w-md">
+        <div id="toast-content" class="bg-slate-800 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border-2 border-white/20">
+            <span id="toast-emoji" class="text-2xl">🎉</span>
+            <p id="toast-text" class="text-sm sm:text-base font-bold leading-snug">Hebat sekali!</p>
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-5 sm:py-8">
+
+        <!-- ========================================================= -->
+        <!-- 1. HALAMAN BERANDA                                         -->
+        <!-- ========================================================= -->
+        <section id="sec-beranda" class="tab-section space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border-4 border-sky-200 relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <div class="lg:col-span-7 space-y-4 text-center lg:text-left">
+                        <span class="inline-block bg-amber-100 text-amber-800 font-extrabold text-xs sm:text-sm px-4 py-1.5 rounded-full border border-amber-300">
+                            👋 Halo Sahabat Kelas 3 SD!
+                        </span>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-sky-900 leading-tight">
+                            Yuk, Jelajahi Rahasia <span class="text-sky-600">Mata Manusia!</span>
+                        </h2>
+                        <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+                            Pernahkah kamu bertanya-tanya, bagaimana kita bisa melihat indahnya pelangi, membaca buku, dan mengenali wajah teman? Ayo belajar bersama <strong>Oki Si Mata Ceria</strong> lewat materi seru, simulasi cahaya, dan 3 misi permainan!
+                        </p>
+                        <div class="pt-2 flex flex-wrap justify-center lg:justify-start gap-3">
+                            <button onclick="navigateTo('tujuan')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-display text-base sm:text-lg px-6 py-3.5 rounded-2xl flex items-center gap-2">
+                                <span>🚀</span> Mulai Petualangan
+                            </button>
+                            <button onclick="navigateTo('gim')" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-display text-base sm:text-lg px-6 py-3.5 rounded-2xl flex items-center gap-2">
+                                <span>🎮</span> Langsung Main Gim
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Maskot Oki Si Mata Ceria (Custom SVG) -->
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="relative w-56 h-56 sm:w-64 sm:h-64 animate-float">
+                            <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-xl">
+                                <!-- Lingkaran Latar -->
+                                <circle cx="120" cy="120" r="108" fill="#E0F2FE" stroke="#38BDF8" stroke-width="6" stroke-dasharray="12 8"/>
+                                <!-- Tangan Kiri & Kanan -->
+                                <path d="M35 130 Q12 110 22 92" stroke="#0284C7" stroke-width="10" stroke-linecap="round" fill="none"/>
+                                <circle cx="22" cy="90" r="9" fill="#FBBF24"/>
+                                <path d="M205 130 Q228 110 218 92" stroke="#0284C7" stroke-width="10" stroke-linecap="round" fill="none"/>
+                                <circle cx="218" cy="90" r="9" fill="#FBBF24"/>
+                                <!-- Badan Bola Mata -->
+                                <circle cx="120" cy="120" r="78" fill="#FFFFFF" stroke="#0284C7" stroke-width="6"/>
+                                <!-- Alis Ceria -->
+                                <path d="M78 62 Q120 44 162 62" stroke="#1E293B" stroke-width="7" stroke-linecap="round" fill="none"/>
+                                <!-- Iris -->
+                                <circle cx="120" cy="112" r="38" fill="#0EA5E9"/>
+                                <circle cx="120" cy="112" r="32" fill="#38BDF8"/>
+                                <!-- Pupil -->
+                                <circle cx="120" cy="112" r="18" fill="#0F172A"/>
+                                <!-- Kilau Cahaya di Mata -->
+                                <circle cx="109" cy="100" r="7" fill="#FFFFFF"/>
+                                <circle cx="131" cy="120" r="3.5" fill="#FFFFFF"/>
+                                <!-- Pipi Merona -->
+                                <ellipse cx="74" cy="138" rx="11" ry="6" fill="#FDA4AF" opacity="0.8"/>
+                                <ellipse cx="166" cy="138" rx="11" ry="6" fill="#FDA4AF" opacity="0.8"/>
+                                <!-- Senyum -->
+                                <path d="M98 156 Q120 176 142 156" stroke="#0F172A" stroke-width="5" stroke-linecap="round" fill="none"/>
+                                <!-- Topi Wisuda / Detektif Sains -->
+                                <polygon points="120,18 65,40 120,56 175,40" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+                                <path d="M175 40 L175 62" stroke="#B45309" stroke-width="3"/>
+                                <circle cx="175" cy="64" r="4" fill="#EF4444"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Peta Belajar Cepat -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                <button onclick="navigateTo('tujuan')" class="bg-white hover:bg-sky-50 p-4 rounded-2xl shadow-md border-2 border-sky-100 text-center transition hover:-translate-y-1">
+                    <div class="text-3xl mb-1.5">🎯</div>
+                    <div class="font-display font-bold text-sky-900 text-sm sm:text-base">1. Tujuan</div>
+                    <div class="text-xs text-slate-500">Target belajar</div>
+                </button>
+                <button onclick="navigateTo('materi')" class="bg-white hover:bg-emerald-50 p-4 rounded-2xl shadow-md border-2 border-emerald-100 text-center transition hover:-translate-y-1">
+                    <div class="text-3xl mb-1.5">📖</div>
+                    <div class="font-display font-bold text-emerald-900 text-sm sm:text-base">2. Materi</div>
+                    <div class="text-xs text-slate-500">Bagian & cara kerja</div>
+                </button>
+                <button onclick="navigateTo('simulasi')" class="bg-white hover:bg-purple-50 p-4 rounded-2xl shadow-md border-2 border-purple-100 text-center transition hover:-translate-y-1">
+                    <div class="text-3xl mb-1.5">🔬</div>
+                    <div class="font-display font-bold text-purple-900 text-sm sm:text-base">3. Simulasi</div>
+                    <div class="text-xs text-slate-500">Uji cahaya & pupil</div>
+                </button>
+                <button onclick="navigateTo('gim')" class="bg-white hover:bg-amber-50 p-4 rounded-2xl shadow-md border-2 border-amber-100 text-center transition hover:-translate-y-1">
+                    <div class="text-3xl mb-1.5">🎮</div>
+                    <div class="font-display font-bold text-amber-900 text-sm sm:text-base">4. Gim 3 Misi</div>
+                    <div class="text-xs text-slate-500">Puzzle & tantangan</div>
+                </button>
+                <button onclick="navigateTo('kuis')" class="bg-white hover:bg-rose-50 p-4 rounded-2xl shadow-md border-2 border-rose-100 text-center transition hover:-translate-y-1">
+                    <div class="text-3xl mb-1.5">📝</div>
+                    <div class="font-display font-bold text-rose-900 text-sm sm:text-base">5. Kuis</div>
+                    <div class="text-xs text-slate-500">Uji pemahaman</div>
+                </button>
+                <button onclick="navigateTo('refleksi')" class="bg-white hover:bg-indigo-50 p-4 rounded-2xl shadow-md border-2 border-indigo-100 text-center transition hover:-translate-y-1">
+                    <div class="text-3xl mb-1.5">🌟</div>
+                    <div class="font-display font-bold text-indigo-900 text-sm sm:text-base">6. Refleksi</div>
+                    <div class="text-xs text-slate-500">Catatan & sertifikat</div>
+                </button>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 2. HALAMAN TUJUAN PEMBELAJARAN                            -->
+        <!-- ========================================================= -->
+        <section id="sec-tujuan" class="tab-section hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-amber-200">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-amber-100 pb-4 mb-6">
+                    <div>
+                        <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full">IPA Kelas 3 SD • Pancaindra</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">🎯 Tujuan Pembelajaran</h2>
+                    </div>
+                    <button onclick="speakText('Tujuan pembelajaran kita hari ini adalah: Pertama, mengenal bagian-bagian luar dan dalam mata manusia. Kedua, memahami fungsi setiap bagian mata. Ketiga, menjelaskan tiga tahapan cara kerja mata saat melihat benda. Keempat, membiasakan cara menjaga kesehatan mata.')" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-sm px-4 py-2.5 rounded-xl flex items-center gap-2 self-start">
+                        <span>🔊</span> Dengarkan Tujuan
+                    </button>
+                </div>
+
+                <p class="text-slate-600 text-base sm:text-lg mb-6">
+                    Setelah belajar dan menyelesaikan permainan di media ini, kamu diharapkan mampu:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-5 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-sky-500 text-white font-display font-bold text-xl flex items-center justify-center shrink-0 shadow">1</div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-sky-900">Mengenal Bagian-Bagian Mata</h3>
+                            <p class="text-slate-600 text-sm sm:text-base mt-1">Menyebutkan bagian luar mata (alis, kelopak, bulu mata) dan bagian dalam mata (kornea, iris, pupil, lensa, retina, saraf optik).</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white font-display font-bold text-xl flex items-center justify-center shrink-0 shadow">2</div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-emerald-900">Memahami Fungsi Bagian Mata</h3>
+                            <p class="text-slate-600 text-sm sm:text-base mt-1">Menjelaskan kegunaan masing-masing bagian mata, misalnya fungsi pupil yang bisa membesar dan mengecil.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 border-2 border-purple-200 rounded-2xl p-5 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500 text-white font-display font-bold text-xl flex items-center justify-center shrink-0 shadow">3</div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-purple-900">Memahami Cara Kerja Mata</h3>
+                            <p class="text-slate-600 text-sm sm:text-base mt-1">Mengurutkan 3 langkah utama bagaimana cahaya dari benda masuk ke mata hingga dikirim ke otak agar kita bisa melihat.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-5 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-500 text-white font-display font-bold text-xl flex items-center justify-center shrink-0 shadow">4</div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-rose-900">Menjaga Kesehatan Mata</h3>
+                            <p class="text-slate-600 text-sm sm:text-base mt-1">Menerapkan kebiasaan baik untuk merawat mata, seperti membaca di tempat terang dan mengatur jarak layar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button onclick="navigateTo('materi')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-display text-base sm:text-lg px-6 py-3 rounded-2xl flex items-center gap-2">
+                        Lanjut ke Materi <span>➡️</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 3. HALAMAN MATERI INTERAKTIF                              -->
+        <!-- ========================================================= -->
+        <section id="sec-materi" class="tab-section hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-emerald-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800">📖 Materi Belajar Mata Manusia</h2>
+                        <p class="text-slate-600 text-sm sm:text-base">Pilih topik di bawah ini dan klik bagian-bagian gambarnya!</p>
+                    </div>
+                    <!-- Sub-tab Materi -->
+                    <div class="flex bg-slate-100 p-1.5 rounded-2xl self-start">
+                        <button id="subtab-bagian" onclick="switchMateriTab('bagian')" class="px-4 py-2 rounded-xl font-bold text-sm bg-emerald-500 text-white shadow transition">
+                            1. Bagian-Bagian Mata
+                        </button>
+                        <button id="subtab-carakerja" onclick="switchMateriTab('carakerja')" class="px-4 py-2 rounded-xl font-bold text-sm text-slate-600 hover:text-slate-900 transition">
+                            2. Cara Kerja Mata
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SUB-MATERI A: BAGIAN-BAGIAN MATA -->
+                <div id="materi-bagian" class="space-y-6">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-sm sm:text-base text-emerald-900 flex items-center gap-3">
+                        <span class="text-2xl">💡</span>
+                        <p><strong>Petunjuk:</strong> Ketuk/klik tombol nama bagian mata atau titik bulat pada gambar penampang mata untuk melihat penjelasannya!</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        <!-- Diagram Penampang Mata Interaktif (SVG) -->
+                        <div class="lg:col-span-7 bg-gradient-to-b from-sky-50 to-white rounded-3xl p-4 border-2 border-sky-200 shadow-inner">
+                            <svg viewBox="0 0 500 320" class="w-full h-auto max-w-lg mx-auto select-none">
+                                <!-- Saraf Optik (Belakang) -->
+                                <path d="M360 135 L475 115 L475 165 L360 175 Z" fill="#FDE047" stroke="#CA8A04" stroke-width="3"/>
+                                <path d="M370 148 L470 132 M370 160 L470 150" stroke="#CA8A04" stroke-width="2" stroke-dasharray="6 4"/>
+                                
+                                <!-- Bola Mata Utama (Sklera) -->
+                                <circle cx="220" cy="160" r="125" fill="#FFFFFF" stroke="#0284C7" stroke-width="5"/>
+                                
+                                <!-- Lapisan Dalam / Retina (Merah Muda / Oranye di dinding belakang) -->
+                                <path d="M220 45 A115 115 0 1 1 220 275" fill="none" stroke="#FB7185" stroke-width="14" stroke-linecap="round"/>
+                                
+                                <!-- Ruang Dalam Bola Mata -->
+                                <circle cx="220" cy="160" r="106" fill="#FEF9C3" opacity="0.55"/>
+
+                                <!-- Kornea (Lengkungan Bening di Depan Kiri) -->
+                                <path d="M112 92 Q62 160 112 228" fill="#BAE6FD" fill-opacity="0.55" stroke="#0284C7" stroke-width="5"/>
+
+                                <!-- Iris (Atas & Bawah di depan lensa) -->
+                                <rect x="115" y="96" width="16" height="40" rx="8" fill="#0EA5E9" stroke="#0369A1" stroke-width="2.5"/>
+                                <rect x="115" y="184" width="16" height="40" rx="8" fill="#0EA5E9" stroke="#0369A1" stroke-width="2.5"/>
+
+                                <!-- Pupil (Celah di tengah Iris) -->
+                                <rect x="117" y="136" width="12" height="48" rx="4" fill="#0F172A"/>
+
+                                <!-- Lensa Mata (Bentuk Oval Bening di belakang Pupil) -->
+                                <ellipse cx="155" cy="160" rx="18" ry="48" fill="#E0F2FE" stroke="#0284C7" stroke-width="3.5"/>
+                                <path d="M150 125 Q143 160 150 195" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+                                <!-- HOTSPOT INTERAKTIF -->
+                                <!-- 1. Kornea -->
+                                <g class="hotspot-dot" onclick="selectEyePart('kornea')">
+                                    <circle cx="88" cy="160" r="16" fill="#0284C7" stroke="#FFFFFF" stroke-width="3"/>
+                                    <text x="88" y="165" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="14">1</text>
+                                </g>
+                                <!-- 2. Iris -->
+                                <g class="hotspot-dot" onclick="selectEyePart('iris')">
+                                    <circle cx="123" cy="112" r="15" fill="#0EA5E9" stroke="#FFFFFF" stroke-width="3"/>
+                                    <text x="123" y="117" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="14">2</text>
+                                </g>
+                                <!-- 3. Pupil -->
+                                <g class="hotspot-dot" onclick="selectEyePart('pupil')">
+                                    <circle cx="123" cy="160" r="15" fill="#1E293B" stroke="#FFFFFF" stroke-width="3"/>
+                                    <text x="123" y="165" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="14">3</text>
+                                </g>
+                                <!-- 4. Lensa -->
+                                <g class="hotspot-dot" onclick="selectEyePart('lensa')">
+                                    <circle cx="160" cy="160" r="16" fill="#10B981" stroke="#FFFFFF" stroke-width="3"/>
+                                    <text x="160" y="165" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="14">4</text>
+                                </g>
+                                <!-- 5. Retina -->
+                                <g class="hotspot-dot" onclick="selectEyePart('retina')">
+                                    <circle cx="326" cy="195" r="16" fill="#F43F5E" stroke="#FFFFFF" stroke-width="3"/>
+                                    <text x="326" y="200" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="14">5</text>
+                                </g>
+                                <!-- 6. Saraf Optik -->
+                                <g class="hotspot-dot" onclick="selectEyePart('saraf')">
+                                    <circle cx="420" cy="142" r="16" fill="#D97706" stroke="#FFFFFF" stroke-width="3"/>
+                                    <text x="420" y="147" text-anchor="middle" fill="#FFFFFF" font-weight="bold" font-size="14">6</text>
+                                </g>
+                            </svg>
+
+                            <!-- Tombol Cepat Bagian Dalam & Luar -->
+                            <div class="flex flex-wrap justify-center gap-2 mt-3">
+                                <button onclick="selectEyePart('kornea')" class="part-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-100 text-sky-800 hover:bg-sky-200 transition" data-part="kornea">1. Kornea</button>
+                                <button onclick="selectEyePart('iris')" class="part-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-100 text-sky-800 hover:bg-sky-200 transition" data-part="iris">2. Iris</button>
+                                <button onclick="selectEyePart('pupil')" class="part-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-100 text-sky-800 hover:bg-sky-200 transition" data-part="pupil">3. Pupil</button>
+                                <button onclick="selectEyePart('lensa')" class="part-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-100 text-sky-800 hover:bg-sky-200 transition" data-part="lensa">4. Lensa Mata</button>
+                                <button onclick="selectEyePart('retina')" class="part-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-100 text-sky-800 hover:bg-sky-200 transition" data-part="retina">5. Retina</button>
+                                <button onclick="selectEyePart('saraf')" class="part-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-sky-100 text-sky-800 hover:bg-sky-200 transition" data-part="saraf">6. Saraf Optik</button>
+                                <button onclick="selectEyePart('pelindung')" class="part-pill px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 text-amber-800 hover:bg-amber-200 transition" data-part="pelindung">✨ Pelindung Luar</button>
+                            </div>
+                        </div>
+
+                        <!-- Kartu Penjelasan Detail Bagian Mata -->
+                        <div class="lg:col-span-5">
+                            <div id="part-detail-card" class="bg-white rounded-3xl p-6 border-4 border-sky-300 shadow-lg space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span id="part-badge" class="bg-sky-100 text-sky-800 font-extrabold text-xs px-3 py-1 rounded-full">Bagian Mata #1</span>
+                                    <button onclick="speakCurrentPart()" class="bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow">
+                                        <span>🔊</span> Bacakan
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div id="part-icon" class="text-4xl">🪟</div>
+                                    <h3 id="part-title" class="text-2xl font-bold text-slate-800">Kornea</h3>
+                                </div>
+                                <p id="part-desc" class="text-slate-700 text-base leading-relaxed">
+                                    <strong>Kornea</strong> adalah bagian bening di paling depan mata kita. Kornea bertugas melindungi bagian dalam mata dan meneruskan cahaya yang masuk ke dalam mata.
+                                </p>
+                                <div class="bg-amber-50 border-l-4 border-amber-400 p-3.5 rounded-r-xl">
+                                    <p class="text-xs font-extrabold text-amber-800 uppercase tracking-wider">Perumpamaan Mudah:</p>
+                                    <p id="part-analogy" class="text-sm text-amber-950 font-semibold mt-0.5">
+                                        Seperti kaca jendela bening di rumah yang membiarkan sinar matahari masuk!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-MATERI B: CARA KERJA MATA -->
+                <div id="materi-carakerja" class="hidden space-y-6">
+                    <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">👀</span>
+                            <div>
+                                <h3 class="font-display font-bold text-lg text-sky-900">Bagaimana Mata Kita Melihat Benda?</h3>
+                                <p class="text-sm text-slate-600">Kita bisa melihat karena ada <strong>cahaya</strong> yang memantul dari benda ke mata kita. Yuk simak 3 langkah utamanya!</p>
+                            </div>
+                        </div>
+                        <button onclick="speakText('Cara kerja mata manusia terdiri dari tiga tahap utama. Tahap pertama: Cahaya memantul dari benda dan masuk ke mata melalui kornea serta pupil. Tahap kedua: Lensa mata memfokuskan cahaya agar jatuh tepat di retina dengan bayangan terbalik. Tahap ketiga: Saraf optik mengirim pesan ke otak, sehingga otak membalikkan bayangan dan kita melihat benda dengan jelas dan tegak!')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shrink-0">
+                            🔊 Dengarkan Penjelasan
+                        </button>
+                    </div>
+
+                    <!-- 3 Langkah Utama Cara Kerja Mata -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <!-- Tahap 1 -->
+                        <div class="bg-gradient-to-b from-amber-50 to-white rounded-3xl p-5 border-2 border-amber-300 shadow-md flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="bg-amber-400 text-slate-900 font-display font-bold px-3.5 py-1 rounded-full text-sm">Tahap 1</span>
+                                    <span class="text-3xl">☀️➡️👁️</span>
+                                </div>
+                                <h4 class="font-display font-bold text-xl text-slate-800 mb-2">Cahaya Masuk ke Mata</h4>
+                                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                                    Cahaya mengenai benda (misalnya buah apel), lalu memantul masuk ke mata melewati <strong>Kornea</strong> dan lubang <strong>Pupil</strong> (yang diatur oleh Iris).
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-amber-200 text-xs font-bold text-amber-800">
+                                Urutan: Benda ➔ Kornea ➔ Pupil
+                            </div>
+                        </div>
+
+                        <!-- Tahap 2 -->
+                        <div class="bg-gradient-to-b from-emerald-50 to-white rounded-3xl p-5 border-2 border-emerald-300 shadow-md flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="bg-emerald-500 text-white font-display font-bold px-3.5 py-1 rounded-full text-sm">Tahap 2</span>
+                                    <span class="text-3xl">🔍➡️🎯</span>
+                                </div>
+                                <h4 class="font-display font-bold text-xl text-slate-800 mb-2">Cahaya Difokuskan ke Retina</h4>
+                                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                                    <strong>Lensa mata</strong> mengumpulkan dan memfokuskan cahaya agar jatuh tepat di layar belakang mata yang disebut <strong>Retina</strong>. Uniknya, bayangan di retina berbentuk <em>terbalik</em>!
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-emerald-200 text-xs font-bold text-emerald-800">
+                                Urutan: Lensa Mata ➔ Retina (Bayangan Terbalik)
+                            </div>
+                        </div>
+
+                        <!-- Tahap 3 -->
+                        <div class="bg-gradient-to-b from-purple-50 to-white rounded-3xl p-5 border-2 border-purple-300 shadow-md flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="bg-purple-500 text-white font-display font-bold px-3.5 py-1 rounded-full text-sm">Tahap 3</span>
+                                    <span class="text-3xl">⚡➡️🧠</span>
+                                </div>
+                                <h4 class="font-display font-bold text-xl text-slate-800 mb-2">Dikirim ke Otak</h4>
+                                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                                    <strong>Saraf optik</strong> membawa sinyal cahaya dari retina menuju <strong>Otak</strong>. Otak lalu menerjemahkan dan membalikkan gambar sehingga kita melihat apel berdiri tegak!
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-purple-200 text-xs font-bold text-purple-800">
+                                Urutan: Saraf Optik ➔ Otak (Benda Terlihat Tegak)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center pt-2">
+                        <button onclick="navigateTo('simulasi')" class="btn-3d bg-purple-600 hover:bg-purple-700 text-white font-display text-base sm:text-lg px-6 py-3.5 rounded-2xl flex items-center gap-2">
+                            <span>🔬</span> Coba di Simulasi Interaktif!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 4. HALAMAN SIMULASI SEDERHANA                             -->
+        <!-- ========================================================= -->
+        <section id="sec-simulasi" class="tab-section hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-purple-200 space-y-8">
+                <div>
+                    <span class="bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-1 rounded-full">Laboratorium Mini IPA</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">🔬 Simulasi Sederhana Cara Kerja Mata</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">Lakukan dua percobaan seru di bawah ini untuk melihat cara mata bekerja secara langsung!</p>
+                </div>
+
+                <!-- SIMULASI 1: REAKSI PUPIL TERHADAP CAHAYA -->
+                <div class="bg-gradient-to-br from-slate-50 to-sky-50 rounded-3xl p-5 sm:p-6 border-2 border-sky-200">
+                    <h3 class="font-display font-bold text-xl text-sky-900 mb-1">Percobaan 1: Mengapa Pupil Bisa Membesar dan Mengecil?</h3>
+                    <p class="text-sm text-slate-600 mb-5">Geser tombol cahaya di bawah ini dari suasana <strong>Gelap</strong> ke <strong>Terang</strong>, lalu perhatikan lingkaran hitam (Pupil) di tengah mata!</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                        <!-- Visual Mata Dinamis -->
+                        <div class="md:col-span-6 flex flex-col items-center">
+                            <div id="sim1-room" class="w-full max-w-sm rounded-3xl p-6 transition-colors duration-300 flex flex-col items-center justify-center border-4 border-slate-300 shadow-inner" style="background-color: #334155;">
+                                <div id="sim1-weather-badge" class="mb-3 px-3 py-1 rounded-full text-xs font-extrabold bg-white/90 text-slate-800">
+                                    🌙 Suasana Redup / Normal
+                                </div>
+                                <svg viewBox="0 0 260 150" class="w-60 h-36">
+                                    <!-- Kelopak & Sklera -->
+                                    <path d="M15 75 Q130 -15 245 75 Q130 165 15 75 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="5"/>
+                                    <!-- Iris -->
+                                    <circle cx="130" cy="75" r="46" fill="#0284C7"/>
+                                    <circle cx="130" cy="75" r="40" fill="#38BDF8"/>
+                                    <!-- Pupil Dinamis -->
+                                    <circle id="sim-pupil-circle" cx="130" cy="75" r="22" fill="#0F172A" style="transition: r 0.25s ease;"/>
+                                    <!-- Pantulan Cahaya -->
+                                    <circle cx="118" cy="63" r="6" fill="#FFFFFF" opacity="0.9"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Kontrol Slider & Penjelasan -->
+                        <div class="md:col-span-6 space-y-4">
+                            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                                <div class="flex justify-between text-xs sm:text-sm font-extrabold mb-2">
+                                    <span class="text-indigo-700">🌑 Gelap (Malam)</span>
+                                    <span id="sim1-percent" class="text-sky-600">Cahaya: 50%</span>
+                                    <span class="text-amber-600">☀️ Sangat Terang</span>
+                                </div>
+                                <input id="light-slider" type="range" min="10" max="100" value="50" oninput="updatePupilSimulation(this.value)" class="w-full h-3 bg-gradient-to-r from-slate-800 via-sky-400 to-amber-400 rounded-lg appearance-none cursor-pointer">
+                                <div class="flex justify-between gap-2 mt-3">
+                                    <button onclick="setLightPreset(15)" class="flex-1 py-1.5 px-2 bg-slate-800 text-white text-xs font-bold rounded-xl">🌙 Mode Gelap</button>
+                                    <button onclick="setLightPreset(50)" class="flex-1 py-1.5 px-2 bg-sky-500 text-white text-xs font-bold rounded-xl">⛅ Normal</button>
+                                    <button onclick="setLightPreset(95)" class="flex-1 py-1.5 px-2 bg-amber-400 text-slate-900 text-xs font-bold rounded-xl">☀️ Silau Terang</button>
+                                </div>
+                            </div>
+
+                            <div id="sim1-explanation" class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-2xl text-sm sm:text-base text-slate-700">
+                                <strong>Hasil Pengamatan:</strong> Dalam cahaya sedang, ukuran pupil normal agar cahaya masuk secukupnya.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIMULASI 2: JALANNYA CAHAYA HINGGA BENDA TERLIHAT -->
+                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-3xl p-5 sm:p-6 border-2 border-purple-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h3 class="font-display font-bold text-xl text-purple-900">Percobaan 2: Perjalanan Cahaya dari Benda ke Otak</h3>
+                            <p class="text-sm text-slate-600">Pilih benda dan nyalakan senter untuk melihat bagaimana bayangan terbentuk di Retina dan dibalikkan oleh Otak!</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="selectSimObject('apel')" id="obj-btn-apel" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-rose-500 text-white shadow">🍎 Apel</button>
+                            <button onclick="selectSimObject('pohon')" id="obj-btn-pohon" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-700 border border-slate-300">🌳 Pohon</button>
+                            <button onclick="selectSimObject('roket')" id="obj-btn-roket" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-700 border border-slate-300">🚀 Roket</button>
+                        </div>
+                    </div>
+
+                    <!-- Kanvas SVG Simulasi Jalannya Cahaya -->
+                    <div class="bg-slate-900 rounded-3xl p-3 sm:p-5 overflow-hidden border-4 border-purple-300 shadow-inner">
+                        <svg viewBox="0 0 680 260" class="w-full h-auto">
+                            <!-- Label Area -->
+                            <text x="75" y="25" text-anchor="middle" fill="#CBD5E1" font-size="13" font-weight="bold">1. BENDA & CAHAYA</text>
+                            <text x="330" y="25" text-anchor="middle" fill="#7DD3FC" font-size="13" font-weight="bold">2. MATA (RETINA TERBALIK)</text>
+                            <text x="585" y="25" text-anchor="middle" fill="#FDE047" font-size="13" font-weight="bold">3. OTAK (TEGAK)</text>
+
+                            <!-- Senter -->
+                            <g transform="translate(15, 38)">
+                                <rect x="0" y="8" width="28" height="16" rx="4" fill="#F59E0B"/>
+                                <polygon points="28,6 40,2 40,30 28,26" fill="#FBBF24"/>
+                                <text x="20" y="42" text-anchor="middle" fill="#FDE047" font-size="10" font-weight="bold">Senter</text>
+                            </g>
+
+                            <!-- Benda Utama (Tegak) -->
+                            <g id="sim2-source-obj" transform="translate(80, 145)">
+                                <text x="0" y="0" text-anchor="middle" font-size="64">🍎</text>
+                            </g>
+
+                            <!-- Bola Mata -->
+                            <g transform="translate(190, 0)">
+                                <!-- Saraf Optik -->
+                                <path d="M235 120 L315 120 L315 148 L235 148 Z" fill="#FDE047" opacity="0.85"/>
+                                <!-- Bola Mata -->
+                                <circle cx="145" cy="135" r="95" fill="#1E293B" stroke="#38BDF8" stroke-width="4"/>
+                                <!-- Retina -->
+                                <path d="M145 48 A87 87 0 1 1 145 222" fill="none" stroke="#FB7185" stroke-width="9" stroke-linecap="round"/>
+                                <!-- Kornea -->
+                                <path d="M62 82 Q25 135 62 188" fill="#BAE6FD" fill-opacity="0.35" stroke="#38BDF8" stroke-width="4"/>
+                                <!-- Lensa -->
+                                <ellipse cx="92" cy="135" rx="13" ry="38" fill="#E0F2FE" fill-opacity="0.8" stroke="#38BDF8" stroke-width="2.5"/>
+                                
+                                <!-- Bayangan Terbalik di Retina -->
+                                <g id="sim2-retina-obj" transform="translate(212, 135) scale(1, -1)" opacity="1" style="transition: opacity 0.4s;">
+                                    <text x="0" y="10" text-anchor="middle" font-size="30">🍎</text>
+                                </g>
+                            </g>
+
+                            <!-- Otak -->
+                            <g transform="translate(515, 75)">
+                                <rect x="0" y="0" width="140" height="120" rx="28" fill="#F472B6" fill-opacity="0.25" stroke="#F472B6" stroke-width="3"/>
+                                <text x="70" y="22" text-anchor="middle" fill="#FBCFE8" font-size="11" font-weight="bold">Otak Menerjemahkan:</text>
+                                <!-- Hasil Gambar Tegak di Otak -->
+                                <g id="sim2-brain-obj" transform="translate(70, 82)" opacity="1" style="transition: opacity 0.4s;">
+                                    <text x="0" y="0" text-anchor="middle" font-size="50">🍎</text>
+                                </g>
+                            </g>
+
+                            <!-- Sinar Cahaya Animasi -->
+                            <g id="sim2-rays">
+                                <!-- Sinar dari senter ke benda -->
+                                <line x1="58" y1="56" x2="78" y2="105" stroke="#FDE047" stroke-width="3" class="light-ray"/>
+                                <!-- Sinar atas benda -> lensa -> bawah retina -->
+                                <polyline points="98,105 282,120 398,152" fill="none" stroke="#38BDF8" stroke-width="2.5" class="light-ray"/>
+                                <!-- Sinar bawah benda -> lensa -> atas retina -->
+                                <polyline points="98,155 282,150 398,118" fill="none" stroke="#34D399" stroke-width="2.5" class="light-ray"/>
+                                <!-- Sinyal listrik saraf optik ke otak -->
+                                <line x1="430" y1="134" x2="512" y2="134" stroke="#FDE047" stroke-width="4" class="light-ray"/>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-purple-200">
+                        <div class="flex items-center gap-3">
+                            <button id="btn-toggle-flashlight" onclick="toggleFlashlight()" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-sm px-4 py-2.5 rounded-xl flex items-center gap-2">
+                                <span>🔦</span> Matikan Cahaya
+                            </button>
+                            <p id="sim2-caption" class="text-xs sm:text-sm text-slate-700 font-semibold">
+                                Cahaya menyala! Bayangan apel jatuh <strong>terbalik</strong> di retina, lalu otak membalikkannya menjadi <strong>tegak</strong>!
+                            </p>
+                        </div>
+                        <button onclick="navigateTo('gim')" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-display text-sm sm:text-base px-5 py-2.5 rounded-xl shrink-0">
+                            Mainkan Gim 3 Misi 🎮
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 5. HALAMAN GIM EDUKATIF (3 MISI)                          -->
+        <!-- ========================================================= -->
+        <section id="sec-gim" class="tab-section hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-amber-300">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full">Arena Petualangan</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">🎮 Gim Edukatif: 3 Misi Detektif Mata</h2>
+                        <p class="text-slate-600 text-sm sm:text-base">Selesaikan ketiga misi berikut untuk mengumpulkan semua bintang!</p>
+                    </div>
+                </div>
+
+                <!-- Pilihan 3 Misi -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                    <button id="mission-tab-1" onclick="selectMission(1)" class="p-4 rounded-2xl border-2 text-left transition flex items-center justify-between bg-sky-500 text-white border-sky-600 shadow-md">
+                        <div>
+                            <div class="text-xs font-extrabold uppercase opacity-90">Misi 1</div>
+                            <div class="font-display font-bold text-base sm:text-lg">🧩 Puzzle Gambar Mata</div>
+                        </div>
+                        <span id="m1-badge" class="text-xl">⬜</span>
+                    </button>
+
+                    <button id="mission-tab-2" onclick="selectMission(2)" class="p-4 rounded-2xl border-2 text-left transition flex items-center justify-between bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">
+                        <div>
+                            <div class="text-xs font-extrabold uppercase text-emerald-600">Misi 2</div>
+                            <div class="font-display font-bold text-base sm:text-lg">🏷️ Drag & Drop Bagian Mata</div>
+                        </div>
+                        <span id="m2-badge" class="text-xl">⬜</span>
+                    </button>
+
+                    <button id="mission-tab-3" onclick="selectMission(3)" class="p-4 rounded-2xl border-2 text-left transition flex items-center justify-between bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">
+                        <div>
+                            <div class="text-xs font-extrabold uppercase text-purple-600">Misi 3</div>
+                            <div class="font-display font-bold text-base sm:text-lg">⚡ 3 Cara Kerja Mata</div>
+                        </div>
+                        <span id="m3-badge" class="text-xl">⬜</span>
+                    </button>
+                </div>
+
+                <!-- ===================================================== -->
+                <!-- MISI 1: MENYUSUN PUZZLE GAMBAR MATA (3x3 SWAP PUZZLE) -->
+                <!-- ===================================================== -->
+                <div id="mission-1-panel" class="space-y-5">
+                    <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-sky-900">Misi 1: Susun Puzzle Mata Manusia!</h3>
+                            <p class="text-xs sm:text-sm text-slate-600">Ketuk <strong>1 potongan</strong> lalu ketuk <strong>potongan lain</strong> untuk menukar posisinya hingga membentuk gambar mata yang utuh!</p>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span class="bg-white px-3 py-1.5 rounded-xl border border-sky-200 text-xs sm:text-sm font-bold text-sky-900">
+                                Langkah: <span id="puzzle-moves">0</span>
+                            </span>
+                            <button onclick="initPuzzle()" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl">
+                                🔄 Acak Ulang
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                        <!-- Grid Puzzle 3x3 -->
+                        <div class="md:col-span-7 flex justify-center">
+                            <div id="puzzle-grid" class="grid grid-cols-3 gap-1.5 bg-sky-200 p-2.5 rounded-3xl shadow-inner border-4 border-sky-400 w-full max-w-[330px] aspect-square">
+                                <!-- Diisi via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Gambar Contoh / Panduan -->
+                        <div class="md:col-span-5 flex flex-col items-center bg-slate-50 p-5 rounded-3xl border-2 border-slate-200">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">Contoh Gambar Utuh:</span>
+                            <div class="w-40 h-40 rounded-2xl overflow-hidden border-4 border-white shadow-md">
+                                <svg viewBox="0 0 300 300" class="w-full h-full">
+                                    <rect width="300" height="300" fill="#E0F2FE"/>
+                                    <!-- Alis -->
+                                    <path d="M55 78 Q150 38 245 78" stroke="#1E293B" stroke-width="14" stroke-linecap="round" fill="none"/>
+                                    <!-- Bulu Mata -->
+                                    <line x1="75" y1="115" x2="60" y2="95" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                                    <line x1="150" y1="98" x2="150" y2="75" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                                    <line x1="225" y1="115" x2="240" y2="95" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                                    <!-- Kelopak & Bola Mata -->
+                                    <path d="M30 155 Q150 55 270 155 Q150 255 30 155 Z" fill="#FFFFFF" stroke="#0284C7" stroke-width="8"/>
+                                    <!-- Iris -->
+                                    <circle cx="150" cy="155" r="54" fill="#0EA5E9"/>
+                                    <circle cx="150" cy="155" r="44" fill="#38BDF8"/>
+                                    <!-- Pupil -->
+                                    <circle cx="150" cy="155" r="24" fill="#0F172A"/>
+                                    <!-- Kilau -->
+                                    <circle cx="134" cy="138" r="10" fill="#FFFFFF"/>
+                                    <circle cx="166" cy="168" r="5" fill="#FFFFFF"/>
+                                    <!-- Label Bawah -->
+                                    <rect x="65" y="255" width="170" height="28" rx="14" fill="#0284C7"/>
+                                    <text x="150" y="274" text-anchor="middle" fill="#FFFFFF" font-family="Fredoka, sans-serif" font-weight="bold" font-size="15">MATA SEHATKU</text>
+                                </svg>
+                            </div>
+                            <p id="puzzle-status-msg" class="text-center text-sm font-bold text-slate-600 mt-3">
+                                Ayo susun ke-9 kotak di samping agar sama persis dengan gambar ini!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===================================================== -->
+                <!-- MISI 2: DRAG AND DROP BAGIAN-BAGIAN MATA              -->
+                <!-- ===================================================== -->
+                <div id="mission-2-panel" class="hidden space-y-5">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-emerald-900">Misi 2: Pasangkan Nama Bagian Mata!</h3>
+                            <p class="text-xs sm:text-sm text-slate-600">
+                                <strong>Cara Bermain:</strong> Seret (<em>Drag & Drop</em>) kartu nama bagian mata ke kotak yang tepat, <strong>ATAU</strong> ketuk kartu nama lalu ketuk kotak tujuannya!
+                            </p>
+                        </div>
+                        <button onclick="initDragDropMission()" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl shrink-0">
+                            🔄 Ulangi Misi 2
+                        </button>
+                    </div>
+
+                    <!-- Bank Kartu Label -->
+                    <div class="bg-slate-100 p-4 rounded-2xl border-2 border-dashed border-slate-300">
+                        <p class="text-xs font-extrabold text-slate-500 uppercase mb-2.5 text-center">Pilihan Nama Bagian Mata (Seret atau Ketuk):</p>
+                        <div id="dd-cards-pool" class="flex flex-wrap justify-center gap-2.5 min-h-[48px]">
+                            <!-- Diisi via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Area Diagram & Drop Zones -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center bg-gradient-to-b from-sky-50 to-white p-4 sm:p-6 rounded-3xl border-2 border-sky-200">
+                        <!-- Kolom Kiri Drop Zones (Depan Mata) -->
+                        <div class="lg:col-span-3 space-y-3 order-2 lg:order-1">
+                            <div class="dd-dropzone bg-white border-2 border-dashed border-sky-400 rounded-2xl p-3 text-center transition" data-target="kornea">
+                                <div class="text-xs font-extrabold text-sky-700 mb-1">Nomor 1 (Bening Depan)</div>
+                                <div class="dd-slot min-h-[38px] rounded-xl bg-sky-50 flex items-center justify-center text-xs font-bold text-slate-400">Letakkan di sini</div>
+                            </div>
+                            <div class="dd-dropzone bg-white border-2 border-dashed border-sky-400 rounded-2xl p-3 text-center transition" data-target="iris">
+                                <div class="text-xs font-extrabold text-sky-700 mb-1">Nomor 2 (Bagian Berwarna)</div>
+                                <div class="dd-slot min-h-[38px] rounded-xl bg-sky-50 flex items-center justify-center text-xs font-bold text-slate-400">Letakkan di sini</div>
+                            </div>
+                            <div class="dd-dropzone bg-white border-2 border-dashed border-sky-400 rounded-2xl p-3 text-center transition" data-target="pupil">
+                                <div class="text-xs font-extrabold text-sky-700 mb-1">Nomor 3 (Lubang Tengah)</div>
+                                <div class="dd-slot min-h-[38px] rounded-xl bg-sky-50 flex items-center justify-center text-xs font-bold text-slate-400">Letakkan di sini</div>
+                            </div>
+                        </div>
+
+                        <!-- Gambar Penampang Mata Bernomor -->
+                        <div class="lg:col-span-6 order-1 lg:order-2">
+                            <svg viewBox="0 0 460 280" class="w-full h-auto max-w-md mx-auto">
+                                <path d="M330 118 L435 100 L435 148 L330 156 Z" fill="#FDE047" stroke="#CA8A04" stroke-width="3"/>
+                                <circle cx="205" cy="140" r="110" fill="#FFFFFF" stroke="#0284C7" stroke-width="5"/>
+                                <path d="M205 38 A102 102 0 1 1 205 242" fill="none" stroke="#FB7185" stroke-width="12" stroke-linecap="round"/>
+                                <circle cx="205" cy="140" r="94" fill="#FEF9C3" opacity="0.5"/>
+                                <!-- Kornea -->
+                                <path d="M108 80 Q64 140 108 200" fill="#BAE6FD" fill-opacity="0.6" stroke="#0284C7" stroke-width="5"/>
+                                <!-- Iris -->
+                                <rect x="110" y="84" width="15" height="35" rx="7" fill="#0EA5E9"/>
+                                <rect x="110" y="161" width="15" height="35" rx="7" fill="#0EA5E9"/>
+                                <!-- Pupil -->
+                                <rect x="112" y="119" width="11" height="42" rx="3" fill="#0F172A"/>
+                                <!-- Lensa -->
+                                <ellipse cx="146" cy="140" rx="16" ry="42" fill="#E0F2FE" stroke="#0284C7" stroke-width="3"/>
+
+                                <!-- Pin Nomor -->
+                                <circle cx="84" cy="140" r="14" fill="#0284C7" stroke="#FFF" stroke-width="2.5"/><text x="84" y="145" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="13">1</text>
+                                <circle cx="117" cy="98" r="14" fill="#0EA5E9" stroke="#FFF" stroke-width="2.5"/><text x="117" y="103" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="13">2</text>
+                                <circle cx="117" cy="140" r="14" fill="#1E293B" stroke="#FFF" stroke-width="2.5"/><text x="117" y="145" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="13">3</text>
+                                <circle cx="150" cy="140" r="14" fill="#10B981" stroke="#FFF" stroke-width="2.5"/><text x="150" y="145" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="13">4</text>
+                                <circle cx="298" cy="172" r="14" fill="#F43F5E" stroke="#FFF" stroke-width="2.5"/><text x="298" y="177" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="13">5</text>
+                                <circle cx="385" cy="128" r="14" fill="#D97706" stroke="#FFF" stroke-width="2.5"/><text x="385" y="133" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="13">6</text>
+                            </svg>
+                        </div>
+
+                        <!-- Kolom Kanan Drop Zones (Dalam & Belakang Mata) -->
+                        <div class="lg:col-span-3 space-y-3 order-3">
+                            <div class="dd-dropzone bg-white border-2 border-dashed border-emerald-400 rounded-2xl p-3 text-center transition" data-target="lensa">
+                                <div class="text-xs font-extrabold text-emerald-700 mb-1">Nomor 4 (Pemfokus Cahaya)</div>
+                                <div class="dd-slot min-h-[38px] rounded-xl bg-emerald-50 flex items-center justify-center text-xs font-bold text-slate-400">Letakkan di sini</div>
+                            </div>
+                            <div class="dd-dropzone bg-white border-2 border-dashed border-rose-400 rounded-2xl p-3 text-center transition" data-target="retina">
+                                <div class="text-xs font-extrabold text-rose-700 mb-1">Nomor 5 (Layar Belakang)</div>
+                                <div class="dd-slot min-h-[38px] rounded-xl bg-rose-50 flex items-center justify-center text-xs font-bold text-slate-400">Letakkan di sini</div>
+                            </div>
+                            <div class="dd-dropzone bg-white border-2 border-dashed border-amber-400 rounded-2xl p-3 text-center transition" data-target="saraf">
+                                <div class="text-xs font-extrabold text-amber-700 mb-1">Nomor 6 (Penghubung Otak)</div>
+                                <div class="dd-slot min-h-[38px] rounded-xl bg-amber-50 flex items-center justify-center text-xs font-bold text-slate-400">Letakkan di sini</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===================================================== -->
+                <!-- MISI 3: 3 CARA KERJA MATA (MENYUSUN URUTAN)           -->
+                <!-- ===================================================== -->
+                <div id="mission-3-panel" class="hidden space-y-5">
+                    <div class="bg-purple-50 border border-purple-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-purple-900">Misi 3: Urutkan 3 Cara Kerja Mata!</h3>
+                            <p class="text-xs sm:text-sm text-slate-600">
+                                Susunlah <strong>3 tahapan cara kerja mata</strong> secara berurutan dari <strong>Langkah 1</strong> sampai <strong>Langkah 3</strong> dengan menekan tombol panah atau mengetuk kartu!
+                            </p>
+                        </div>
+                        <button onclick="initMission3()" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl shrink-0">
+                            🔄 Acak Ulang
+                        </button>
+                    </div>
+
+                    <div id="m3-steps-container" class="space-y-3 max-w-2xl mx-auto">
+                        <!-- Diisi via JS -->
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3 pt-2">
+                        <button onclick="checkMission3()" class="btn-3d bg-purple-600 hover:bg-purple-700 text-white font-display text-base sm:text-lg px-8 py-3.5 rounded-2xl flex items-center gap-2">
+                            <span>✅</span> Periksa Urutan Cara Kerja Mata
+                        </button>
+                        <div id="m3-feedback" class="hidden text-center p-4 rounded-2xl max-w-xl w-full font-bold text-sm sm:text-base"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 6. HALAMAN KUIS EVALUASI                                  -->
+        <!-- ========================================================= -->
+        <section id="sec-kuis" class="tab-section hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-rose-200 max-w-3xl mx-auto">
+                <div class="flex items-center justify-between border-b-2 border-rose-100 pb-4 mb-6">
+                    <div>
+                        <span class="bg-rose-100 text-rose-800 text-xs font-extrabold px-3 py-1 rounded-full">Uji Pemahaman</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">📝 Kuis Evaluasi Mata Manusia</h2>
+                    </div>
+                    <div id="quiz-progress-badge" class="bg-rose-500 text-white font-display font-bold px-4 py-2 rounded-2xl text-sm sm:text-base shadow">
+                        Soal 1 / 8
+                    </div>
+                </div>
+
+                <!-- Kontainer Soal Kuis -->
+                <div id="quiz-question-box" class="space-y-5">
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                        <div id="quiz-bar" class="bg-rose-500 h-full transition-all duration-300" style="width: 12.5%"></div>
+                    </div>
+
+                    <div class="bg-rose-50/70 p-5 rounded-2xl border border-rose-200">
+                        <p id="quiz-q-text" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+                            Memuat pertanyaan...
+                        </p>
+                    </div>
+
+                    <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                        <!-- Pilihan jawaban diisi JS -->
+                    </div>
+
+                    <div id="quiz-explanation" class="hidden p-4 rounded-2xl text-sm sm:text-base font-semibold">
+                        <!-- Penjelasan jawaban -->
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button id="btn-next-quiz" onclick="nextQuizQuestion()" class="hidden btn-3d bg-sky-500 hover:bg-sky-600 text-white font-display text-base px-6 py-3 rounded-2xl">
+                            Soal Berikutnya ➡️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Layar Hasil Kuis -->
+                <div id="quiz-result-box" class="hidden text-center py-6 space-y-5">
+                    <div id="quiz-stars-display" class="text-5xl sm:text-6xl animate-bounce-short">⭐⭐⭐</div>
+                    <h3 class="text-2xl sm:text-3xl font-bold text-slate-800">Kuis Selesai!</h3>
+                    <div class="bg-sky-50 border-2 border-sky-200 rounded-3xl p-6 max-w-md mx-auto">
+                        <p class="text-sm font-bold text-slate-500 uppercase">Nilai Akhir Kamu:</p>
+                        <div id="quiz-final-score" class="text-5xl font-display font-bold text-sky-600 my-1">100</div>
+                        <p id="quiz-final-msg" class="text-slate-700 font-semibold text-sm sm:text-base mt-2">
+                            Luar biasa! Kamu sangat memahami bagian dan cara kerja mata!
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-3 pt-2">
+                        <button onclick="restartQuiz()" class="btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-display px-6 py-3 rounded-2xl">
+                            🔄 Ulangi Kuis
+                        </button>
+                        <button onclick="navigateTo('refleksi')" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-display px-6 py-3 rounded-2xl">
+                            Lanjut ke Refleksi 🌟
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 7. HALAMAN REFLEKSI & SERTIFIKAT                          -->
+        <!-- ========================================================= -->
+        <section id="sec-refleksi" class="tab-section hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-indigo-200 max-w-4xl mx-auto space-y-6">
+                <div>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1 rounded-full">Penutup Pembelajaran</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">🌟 Refleksi & Janji Menjaga Mata</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">Ceritakan pengalaman belajarmu hari ini dan buat kartu prestasimu!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Form Refleksi -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="student-name" class="block text-sm font-extrabold text-slate-700 mb-1">1. Siapa nama lengkapmu?</label>
+                            <input id="student-name" type="text" placeholder="Contoh: Budi Santoso - Kelas 3A" oninput="updateReflectionCard()" class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none font-semibold text-slate-800">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-extrabold text-slate-700 mb-1.5">2. Bagaimana perasaanmu setelah belajar hari ini?</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button type="button" onclick="selectMood('Sangat Senang 🤩')" class="mood-btn p-2.5 rounded-2xl border-2 border-indigo-500 bg-indigo-50 text-center font-bold text-xs sm:text-sm">
+                                    <div class="text-2xl">🤩</div>
+                                    Sangat Senang
+                                </button>
+                                <button type="button" onclick="selectMood('Senang & Paham 😊')" class="mood-btn p-2.5 rounded-2xl border-2 border-slate-200 bg-white text-center font-bold text-xs sm:text-sm">
+                                    <div class="text-2xl">😊</div>
+                                    Paham
+                                </button>
+                                <button type="button" onclick="selectMood('Ingin Belajar Lagi 🤔')" class="mood-btn p-2.5 rounded-2xl border-2 border-slate-200 bg-white text-center font-bold text-xs sm:text-sm">
+                                    <div class="text-2xl">🤔</div>
+                                    Penasaran
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-extrabold text-slate-700 mb-1.5">3. Centang janji merawat matamu:</label>
+                            <div class="space-y-2 bg-sky-50 p-3.5 rounded-2xl border border-sky-200 text-xs sm:text-sm font-semibold text-slate-700">
+                                <label class="flex items-center gap-2.5 cursor-pointer">
+                                    <input type="checkbox" checked onchange="updateReflectionCard()" class="habit-check w-4 h-4 accent-indigo-600" value="Membaca di tempat yang terang">
+                                    <span>💡 Membaca buku di tempat yang cukup terang</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 cursor-pointer">
+                                    <input type="checkbox" checked onchange="updateReflectionCard()" class="habit-check w-4 h-4 accent-indigo-600" value="Mengatur jarak mata saat melihat layar HP/TV">
+                                    <span>📱 Menjaga jarak mata saat melihat layar HP/TV</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 cursor-pointer">
+                                    <input type="checkbox" checked onchange="updateReflectionCard()" class="habit-check w-4 h-4 accent-indigo-600" value="Makan sayur dan buah yang mengandung vitamin A">
+                                    <span>🥕 Rajin makan wortel, sayur, dan buah sehat</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="reflection-note" class="block text-sm font-extrabold text-slate-700 mb-1">4. Hal baru apa yang paling kamu ingat hari ini?</label>
+                            <textarea id="reflection-note" rows="2" placeholder="Contoh: Aku baru tahu kalau bayangan di retina ternyata terbalik!" oninput="updateReflectionCard()" class="w-full px-4 py-2.5 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none text-sm font-semibold text-slate-800"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Pratinjau Kartu Prestasi & Refleksi -->
+                    <div class="flex flex-col justify-between">
+                        <div id="certificate-card" class="bg-gradient-to-br from-amber-100 via-yellow-50 to-sky-100 rounded-3xl p-6 border-4 border-amber-400 shadow-lg relative overflow-hidden space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="bg-amber-400 text-slate-900 font-display font-bold text-xs px-3 py-1 rounded-full">🏅 SERTIFIKAT DETEKTIF MATA</span>
+                                <span class="text-2xl">👁️✨</span>
+                            </div>
+                            <div class="pt-1">
+                                <p class="text-xs font-bold text-slate-500 uppercase">Diberikan kepada:</p>
+                                <h3 id="cert-name" class="text-xl sm:text-2xl font-display font-bold text-sky-900 break-words">Siswa Hebat Kelas 3 SD</h3>
+                            </div>
+                            <div class="bg-white/80 rounded-2xl p-3.5 text-xs sm:text-sm space-y-1.5 border border-amber-200">
+                                <p><strong>Perasaan Belajar:</strong> <span id="cert-mood">Sangat Senang 🤩</span></p>
+                                <p><strong>Bintang Terkumpul:</strong> <span id="cert-stars">0</span> ⭐</p>
+                                <p><strong>Catatan Belajar:</strong> <span id="cert-note" class="italic text-slate-600">"Mata adalah anugerah Tuhan yang harus dijaga!"</span></p>
+                            </div>
+                            <p class="text-[11px] font-bold text-emerald-800">
+                                ✅ Berjanji menjaga kesehatan mata setiap hari.
+                            </p>
+                        </div>
+
+                        <button onclick="copyReflectionSummary()" class="mt-4 btn-3d bg-indigo-600 hover:bg-indigo-700 text-white font-display text-sm sm:text-base px-5 py-3.5 rounded-2xl flex items-center justify-center gap-2 w-full">
+                            <span>📋</span> Salin Hasil Refleksi untuk Guru / Orang Tua
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-sky-100 py-4 text-center text-xs sm:text-sm text-slate-500 font-semibold mt-8">
+        Media Pembelajaran Interaktif IPA Kelas 3 SD • Mengenal & Memahami Mata Manusia
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- SCRIPT LOGIKA APLIKASI, AUDIO, SIMULASI, GIM 3 MISI & KUIS            -->
+    <!-- ===================================================================== -->
+    <script>
+        // ==========================================
+        // 1. SISTEM EFEK SUARA (WEB AUDIO API) & TTS
+        // ==========================================
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playTone(freq, type = 'sine', duration = 0.15, delay = 0) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime + delay);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + delay);
+                osc.stop(audioCtx.currentTime + delay + duration);
+            } catch (e) {}
+        }
+
+        const SoundFX = {
+            click: () => playTone(520, 'sine', 0.08),
+            success: () => {
+                playTone(523.25, 'triangle', 0.14, 0);
+                playTone(659.25, 'triangle', 0.14, 0.1);
+                playTone(783.99, 'triangle', 0.22, 0.2);
+            },
+            error: () => {
+                playTone(260, 'sine', 0.16, 0);
+                playTone(210, 'sine', 0.22, 0.12);
+            },
+            win: () => {
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                    playTone(f, 'triangle', 0.2, i * 0.11);
+                });
+            }
+        };
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
+            if (soundEnabled) SoundFX.click();
+            showToast(soundEnabled ? 'Efek suara diaktifkan!' : 'Efek suara dimatikan.', soundEnabled ? '🔊' : '🔇');
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showToast('Browser ini belum mendukung fitur baca suara otomatis.', 'ℹ️');
+            }
+        }
+
+        // ==========================================
+        // 2. NOTIFIKASI TOAST & CONFETTI
+        // ==========================================
+        let toastTimer = null;
+        function showToast(message, emoji = '🎉') {
+            const box = document.getElementById('toast-box');
+            document.getElementById('toast-text').textContent = message;
+            document.getElementById('toast-emoji').textContent = emoji;
+            box.classList.remove('opacity-0', 'translate-y-4');
+            box.classList.add('opacity-100', 'translate-y-0');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                box.classList.add('opacity-0', 'translate-y-4');
+                box.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        function launchConfetti() {
+            const colors = ['#FBBF24', '#38BDF8', '#10B981', '#F43F5E', '#A855F7'];
+            for (let i = 0; i < 36; i++) {
+                const el = document.createElement('div');
+                el.className = 'confetti-piece rounded-sm';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                el.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 3500);
+            }
+        }
+
+        // ==========================================
+        // 3. SISTEM BINTANG & NAVIGASI TAB
+        // ==========================================
+        const state = {
+            stars: 0,
+            m1Done: false,
+            m2Done: false,
+            m3Done: false,
+            quizDone: false,
+            currentPartKey: 'kornea',
+            mood: 'Sangat Senang 🤩'
+        };
+
+        function addStars(amount) {
+            state.stars += amount;
+            document.getElementById('total-stars').textContent = state.stars;
+            document.getElementById('cert-stars').textContent = state.stars;
+        }
+
+        function navigateTo(tabName) {
+            SoundFX.click();
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById('sec-' + tabName);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('bg-sky-500', 'text-white', 'shadow-sm');
+                    btn.classList.remove('text-slate-700', 'hover:bg-sky-50');
+                } else {
+                    btn.classList.remove('bg-sky-500', 'text-white', 'shadow-sm');
+                    btn.classList.add('text-slate-700', 'hover:bg-sky-50');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // 4. DATA & INTERAKSI MATERI MATA
+        // ==========================================
+        const eyePartsData = {
+            kornea: {
+                badge: 'Bagian Dalam #1',
+                icon: '🪟',
+                title: 'Kornea',
+                desc: 'Kornea adalah lapisan paling depan mata yang bening dan tembus cahaya. Kornea berfungsi melindungi bagian dalam mata serta meneruskan cahaya yang masuk ke mata.',
+                analogy: 'Seperti kaca jendela bening di rumah yang membiarkan sinar matahari masuk ke dalam!'
+            },
+            iris: {
+                badge: 'Bagian Dalam #2',
+                icon: '🎨',
+                title: 'Iris (Selaput Pelangi)',
+                desc: 'Iris adalah bagian mata yang memiliki warna (seperti cokelat, hitam, biru, atau hijau). Iris bertugas mengatur besar kecilnya lubang pupil sesuai terang atau gelapnya cahaya.',
+                analogy: 'Seperti tirai gorden jendela yang bisa dibuka lebar atau ditutup sebagian!'
+            },
+            pupil: {
+                badge: 'Bagian Dalam #3',
+                icon: '⚫',
+                title: 'Pupil',
+                desc: 'Pupil adalah lubang bulat berwarna hitam di tengah iris. Pupil menjadi pintu masuk cahaya. Saat gelap pupil membesar, dan saat terang pupil mengecil.',
+                analogy: 'Seperti pintu masuk cahaya yang otomatis menyesuaikan diri agar mata tidak silau!'
+            },
+            lensa: {
+                badge: 'Bagian Dalam #4',
+                icon: '🔍',
+                title: 'Lensa Mata',
+                desc: 'Lensa mata berada tepat di belakang pupil. Bentuknya bening dan cembung. Lensa berfungsi mengumpulkan dan memfokuskan cahaya agar jatuh tepat di retina.',
+                analogy: 'Seperti kaca pembesar atau lensa kamera yang membuat foto terlihat tajam dan jelas!'
+            },
+            retina: {
+                badge: 'Bagian Dalam #5',
+                icon: '🎬',
+                title: 'Retina (Selaput Jala)',
+                desc: 'Retina adalah layar sensitif cahaya di dinding paling belakang bola mata. Di retina inilah bayangan benda terbentuk dalam posisi terbalik.',
+                analogy: 'Seperti layar putih di bioskop tempat gambar film ditangkap!'
+            },
+            saraf: {
+                badge: 'Bagian Dalam #6',
+                icon: '⚡',
+                title: 'Saraf Optik',
+                desc: 'Saraf optik adalah kumpulan serabut saraf yang menghubungkan retina dengan otak. Saraf ini mengirim sinyal gambar dari mata menuju otak.',
+                analogy: 'Seperti kabel internet super cepat yang mengirim foto dari kamera ke layar komputer!'
+            },
+            pelindung: {
+                badge: 'Bagian Luar Mata',
+                icon: '🛡️',
+                title: 'Alis, Kelopak & Bulu Mata',
+                desc: 'Bagian luar melindungi mata kita: Alis menahan keringat dari dahi; Kelopak mata menutup saat ada bahaya dan membasahi mata saat berkedip; Bulu mata menyaring debu dan kotoran.',
+                analogy: 'Seperti satpam dan payung pelindung yang menjaga mata agar tetap bersih dan aman!'
+            }
+        };
+
+        function selectEyePart(key) {
+            SoundFX.click();
+            state.currentPartKey = key;
+            const data = eyePartsData[key];
+            if (!data) return;
+
+            document.getElementById('part-badge').textContent = data.badge;
+            document.getElementById('part-icon').textContent = data.icon;
+            document.getElementById('part-title').textContent = data.title;
+            document.getElementById('part-desc').textContent = data.desc;
+            document.getElementById('part-analogy').textContent = data.analogy;
+
+            document.querySelectorAll('.part-pill').forEach(btn => {
+                if (btn.dataset.part === key) {
+                    btn.classList.add('ring-2', 'ring-sky-600', 'scale-105');
+                } else {
+                    btn.classList.remove('ring-2', 'ring-sky-600', 'scale-105');
+                }
+            });
+        }
+
+        function speakCurrentPart() {
+            const d = eyePartsData[state.currentPartKey];
+            if (d) speakText(d.title + '. ' + d.desc);
+        }
+
+        function switchMateriTab(sub) {
+            SoundFX.click();
+            const btnBagian = document.getElementById('subtab-bagian');
+            const btnCara = document.getElementById('subtab-carakerja');
+            if (sub === 'bagian') {
+                document.getElementById('materi-bagian').classList.remove('hidden');
+                document.getElementById('materi-carakerja').classList.add('hidden');
+                btnBagian.className = 'px-4 py-2 rounded-xl font-bold text-sm bg-emerald-500 text-white shadow transition';
+                btnCara.className = 'px-4 py-2 rounded-xl font-bold text-sm text-slate-600 hover:text-slate-900 transition';
+            } else {
+                document.getElementById('materi-bagian').classList.add('hidden');
+                document.getElementById('materi-carakerja').classList.remove('hidden');
+                btnCara.className = 'px-4 py-2 rounded-xl font-bold text-sm bg-emerald-500 text-white shadow transition';
+                btnBagian.className = 'px-4 py-2 rounded-xl font-bold text-sm text-slate-600 hover:text-slate-900 transition';
+            }
+        }
+
+        // ==========================================
+        // 5. LOGIKA SIMULASI INTERAKTIF
+        // ==========================================
+        function updatePupilSimulation(val) {
+            const lightVal = parseInt(val, 10);
+            document.getElementById('sim1-percent').textContent = `Cahaya: ${lightVal}%`;
+
+            // Semakin gelap (lightVal kecil) -> pupil membesar (r hingga 33)
+            // Semakin terang (lightVal besar) -> pupil mengecil (r hingga 9)
+            const radius = Math.round(35 - ((lightVal - 10) / 90) * 26);
+            document.getElementById('sim-pupil-circle').setAttribute('r', radius);
+
+            const room = document.getElementById('sim1-room');
+            const badge = document.getElementById('sim1-weather-badge');
+            const exp = document.getElementById('sim1-explanation');
+
+            if (lightVal < 35) {
+                room.style.backgroundColor = '#0F172A';
+                badge.textContent = '🌑 Suasana Gelap (Malam Hari)';
+                exp.innerHTML = '<strong>Pupil Membesar!</strong> Karena ruangan gelap, Iris membuka Pupil lebih lebar agar lebih banyak cahaya masuk sehingga kita tetap bisa melihat.';
+            } else if (lightVal > 70) {
+                room.style.backgroundColor = '#FEF08A';
+                badge.textContent = '☀️ Suasana Sangat Terang (Siang Terik)';
+                exp.innerHTML = '<strong>Pupil Mengecil!</strong> Karena cahaya sangat terang, Iris mengecilkan lubang Pupil agar mata kita tidak silau dan bagian dalam mata terlindungi.';
+            } else {
+                room.style.backgroundColor = '#334155';
+                badge.textContent = '⛅ Suasana Cahaya Normal';
+                exp.innerHTML = '<strong>Ukuran Pupil Normal!</strong> Cahaya cukup nyaman sehingga Pupil berada pada ukuran sedang.';
+            }
+        }
+
+        function setLightPreset(val) {
+            SoundFX.click();
+            const slider = document.getElementById('light-slider');
+            slider.value = val;
+            updatePupilSimulation(val);
+        }
+
+        let flashlightOn = true;
+        const simObjects = {
+            apel: '🍎',
+            pohon: '🌳',
+            roket: '🚀'
+        };
+
+        function selectSimObject(objKey) {
+            SoundFX.click();
+            const emoji = simObjects[objKey];
+            document.querySelector('#sim2-source-obj text').textContent = emoji;
+            document.querySelector('#sim2-retina-obj text').textContent = emoji;
+            document.querySelector('#sim2-brain-obj text').textContent = emoji;
+
+            ['apel', 'pohon', 'roket'].forEach(k => {
+                const btn = document.getElementById('obj-btn-' + k);
+                if (k === objKey) {
+                    btn.className = 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-rose-500 text-white shadow';
+                } else {
+                    btn.className = 'px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-700 border border-slate-300';
+                }
+            });
+        }
+
+        function toggleFlashlight() {
+            SoundFX.click();
+            flashlightOn = !flashlightOn;
+            const btn = document.getElementById('btn-toggle-flashlight');
+            const rays = document.getElementById('sim2-rays');
+            const retinaObj = document.getElementById('sim2-retina-obj');
+            const brainObj = document.getElementById('sim2-brain-obj');
+            const caption = document.getElementById('sim2-caption');
+
+            if (flashlightOn) {
+                btn.innerHTML = '<span>🔦</span> Matikan Cahaya';
+                btn.className = 'btn-3d bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-sm px-4 py-2.5 rounded-xl flex items-center gap-2';
+                rays.style.opacity = '1';
+                retinaObj.style.opacity = '1';
+                brainObj.style.opacity = '1';
+                caption.innerHTML = 'Cahaya menyala! Bayangan benda jatuh <strong>terbalik</strong> di retina, lalu otak membalikkannya menjadi <strong>tegak</strong>!';
+            } else {
+                btn.innerHTML = '<span>💡</span> Nyalakan Cahaya';
+                btn.className = 'btn-3d bg-slate-700 hover:bg-slate-800 text-white font-bold text-sm px-4 py-2.5 rounded-xl flex items-center gap-2';
+                rays.style.opacity = '0.08';
+                retinaObj.style.opacity = '0';
+                brainObj.style.opacity = '0';
+                caption.innerHTML = '<strong>Gelap Gulita!</strong> Tanpa ada cahaya yang memantul dari benda ke mata, mata dan otak tidak dapat melihat benda tersebut.';
+            }
+        }
+
+        // ==========================================
+        // 6. GIM EDUKATIF: NAVIGASI 3 MISI
+        // ==========================================
+        function selectMission(num) {
+            SoundFX.click();
+            [1, 2, 3].forEach(n => {
+                const tab = document.getElementById(`mission-tab-${n}`);
+                const panel = document.getElementById(`mission-${n}-panel`);
+                if (n === num) {
+                    panel.classList.remove('hidden');
+                    tab.className = 'p-4 rounded-2xl border-2 text-left transition flex items-center justify-between bg-sky-500 text-white border-sky-600 shadow-md';
+                } else {
+                    panel.classList.add('hidden');
+                    tab.className = 'p-4 rounded-2xl border-2 text-left transition flex items-center justify-between bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100';
+                }
+            });
+        }
+
+        // --- MISI 1: PUZZLE GAMBAR MATA (3x3 SWAP) ---
+        let puzzleOrder = [];
+        let selectedTileIdx = null;
+        let puzzleMoves = 0;
+
+        function initPuzzle() {
+            puzzleMoves = 0;
+            selectedTileIdx = null;
+            document.getElementById('puzzle-moves').textContent = '0';
+            document.getElementById('puzzle-status-msg').textContent = 'Ketuk 1 potongan lalu ketuk potongan lain untuk menukarnya!';
+            document.getElementById('puzzle-status-msg').className = 'text-center text-sm font-bold text-slate-600 mt-3';
+
+            // Buat urutan acak [0..8] yang belum terurut
+            puzzleOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            do {
+                for (let i = puzzleOrder.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [puzzleOrder[i], puzzleOrder[j]] = [puzzleOrder[j], puzzleOrder[i]];
+                }
+            } while (puzzleOrder.every((val, idx) => val === idx));
+
+            renderPuzzle();
+        }
+
+        function renderPuzzle() {
+            const grid = document.getElementById('puzzle-grid');
+            grid.innerHTML = '';
+
+            puzzleOrder.forEach((pieceId, gridPos) => {
+                const row = Math.floor(pieceId / 3);
+                const col = pieceId % 3;
+                const vx = col * 100;
+                const vy = row * 100;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                const isSelected = selectedTileIdx === gridPos;
+                btn.className = `relative rounded-xl overflow-hidden transition-transform focus:outline-none ${
+                    isSelected ? 'ring-4 ring-amber-400 scale-95 z-10' : 'hover:scale-[1.02]'
+                }`;
+                btn.onclick = () => handlePuzzleTileClick(gridPos);
+
+                // Potongan SVG presisi menggunakan viewBox potongan 100x100 dari 300x300
+                btn.innerHTML = `
+                    <svg viewBox="${vx} ${vy} 100 100" class="w-full h-full block pointer-events-none">
+                        <rect width="300" height="300" fill="#E0F2FE"/>
+                        <path d="M55 78 Q150 38 245 78" stroke="#1E293B" stroke-width="14" stroke-linecap="round" fill="none"/>
+                        <line x1="75" y1="115" x2="60" y2="95" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="150" y1="98" x2="150" y2="75" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="225" y1="115" x2="240" y2="95" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M30 155 Q150 55 270 155 Q150 255 30 155 Z" fill="#FFFFFF" stroke="#0284C7" stroke-width="8"/>
+                        <circle cx="150" cy="155" r="54" fill="#0EA5E9"/>
+                        <circle cx="150" cy="155" r="44" fill="#38BDF8"/>
+                        <circle cx="150" cy="155" r="24" fill="#0F172A"/>
+                        <circle cx="134" cy="138" r="10" fill="#FFFFFF"/>
+                        <circle cx="166" cy="168" r="5" fill="#FFFFFF"/>
+                        <rect x="65" y="255" width="170" height="28" rx="14" fill="#0284C7"/>
+                        <text x="150" y="274" text-anchor="middle" fill="#FFFFFF" font-family="Fredoka, sans-serif" font-weight="bold" font-size="15">MATA SEHATKU</text>
+                    </svg>
+                `;
+                grid.appendChild(btn);
+            });
+        }
+
+        function handlePuzzleTileClick(gridPos) {
+            if (selectedTileIdx === null) {
+                SoundFX.click();
+                selectedTileIdx = gridPos;
+                renderPuzzle();
+            } else if (selectedTileIdx === gridPos) {
+                SoundFX.click();
+                selectedTileIdx = null;
+                renderPuzzle();
+            } else {
+                // Tukar dua potongan
+                [puzzleOrder[selectedTileIdx], puzzleOrder[gridPos]] = [puzzleOrder[gridPos], puzzleOrder[selectedTileIdx]];
+                selectedTileIdx = null;
+                puzzleMoves++;
+                document.getElementById('puzzle-moves').textContent = puzzleMoves;
+                SoundFX.click();
+                renderPuzzle();
+
+                // Cek kemenangan
+                if (puzzleOrder.every((val, idx) => val === idx)) {
+                    SoundFX.win();
+                    launchConfetti();
+                    document.getElementById('puzzle-status-msg').textContent = '🎉 Hore! Misi 1 Selesai! Gambar mata tersusun sempurna!';
+                    document.getElementById('puzzle-status-msg').className = 'text-center text-sm font-extrabold text-emerald-600 mt-3';
+                    document.getElementById('m1-badge').textContent = '✅';
+                    if (!state.m1Done) {
+                        state.m1Done = true;
+                        addStars(10);
+                        showToast('Misi 1 Selesai! +10 Bintang! Ayo lanjut ke Misi 2!', '🧩');
+                    } else {
+                        showToast('Hebat! Puzzle mata berhasil disusun lagi!', '🧩');
+                    }
+                }
+            }
+        }
+
+        // --- MISI 2: DRAG & DROP + TAP-TO-MATCH BAGIAN MATA ---
+        const ddItems = [
+            { id: 'kornea', label: 'Kornea' },
+            { id: 'iris', label: 'Iris' },
+            { id: 'pupil', label: 'Pupil' },
+            { id: 'lensa', label: 'Lensa Mata' },
+            { id: 'retina', label: 'Retina' },
+            { id: 'saraf', label: 'Saraf Optik' }
+        ];
+        let selectedDDCardId = null;
+        let ddMatchedCount = 0;
+
+        function initDragDropMission() {
+            selectedDDCardId = null;
+            ddMatchedCount = 0;
+            const pool = document.getElementById('dd-cards-pool');
+            pool.innerHTML = '';
+
+            // Acak kartu
+            const shuffled = [...ddItems].sort(() => Math.random() - 0.5);
+            shuffled.forEach(item => {
+                const chip = document.createElement('div');
+                chip.id = 'dd-chip-' + item.id;
+                chip.dataset.id = item.id;
+                chip.draggable = true;
+                chip.className = 'dd-chip cursor-grab active:cursor-grabbing select-none bg-white hover:bg-sky-50 text-slate-800 font-display font-bold text-sm sm:text-base px-4 py-2.5 rounded-2xl border-2 border-sky-400 shadow-sm transition';
+                chip.textContent = item.label;
+
+                // Event Drag HTML5 (Laptop)
+                chip.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', item.id);
+                    selectDDChip(item.id);
+                });
+
+                // Event Tap/Click (HP & Laptop)
+                chip.addEventListener('click', () => {
+                    SoundFX.click();
+                    selectDDChip(item.id);
+                });
+
+                pool.appendChild(chip);
+            });
+
+            // Reset semua Drop Zone
+            document.querySelectorAll('.dd-dropzone').forEach(zone => {
+                zone.dataset.filled = 'false';
+                zone.classList.remove('bg-emerald-100', 'border-emerald-500');
+                const slot = zone.querySelector('.dd-slot');
+                slot.textContent = 'Letakkan di sini';
+                slot.className = 'dd-slot min-h-[38px] rounded-xl bg-slate-50 flex items-center justify-center text-xs font-bold text-slate-400';
+            });
+        }
+
+        function selectDDChip(id) {
+            selectedDDCardId = id;
+            document.querySelectorAll('.dd-chip').forEach(c => {
+                if (c.dataset.id === id) {
+                    c.classList.add('ring-4', 'ring-amber-400', 'bg-amber-50');
+                } else {
+                    c.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-50');
+                }
+            });
+        }
+
+        function setupDropZones() {
+            document.querySelectorAll('.dd-dropzone').forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (zone.dataset.filled !== 'true') {
+                        zone.classList.add('scale-[1.03]', 'bg-amber-50');
+                    }
+                });
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('scale-[1.03]', 'bg-amber-50');
+                });
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('scale-[1.03]', 'bg-amber-50');
+                    const draggedId = e.dataTransfer.getData('text/plain') || selectedDDCardId;
+                    handleDropAttempt(zone, draggedId);
+                });
+                zone.addEventListener('click', () => {
+                    if (selectedDDCardId) {
+                        handleDropAttempt(zone, selectedDDCardId);
+                    } else if (zone.dataset.filled !== 'true') {
+                        showToast('Ketuk dulu salah satu nama bagian mata di atas!', '👆');
+                    }
+                });
+            });
+        }
+
+        function handleDropAttempt(zone, itemId) {
+            if (!itemId || zone.dataset.filled === 'true') return;
+            const targetId = zone.dataset.target;
+
+            if (itemId === targetId) {
+                SoundFX.success();
+                zone.dataset.filled = 'true';
+                zone.classList.add('bg-emerald-100', 'border-emerald-500');
+                const found = ddItems.find(i => i.id === itemId);
+                const slot = zone.querySelector('.dd-slot');
+                slot.textContent = '✅ ' + found.label;
+                slot.className = 'dd-slot min-h-[38px] rounded-xl bg-emerald-500 text-white flex items-center justify-center text-sm font-display font-bold shadow';
+
+                const chip = document.getElementById('dd-chip-' + itemId);
+                if (chip) chip.remove();
+                selectedDDCardId = null;
+                ddMatchedCount++;
+
+                if (ddMatchedCount === ddItems.length) {
+                    SoundFX.win();
+                    launchConfetti();
+                    document.getElementById('m2-badge').textContent = '✅';
+                    if (!state.m2Done) {
+                        state.m2Done = true;
+                        addStars(15);
+                        showToast('Luar Biasa! Misi 2 Selesai! +15 Bintang!', '🏷️');
+                    } else {
+                        showToast('Hebat! Semua bagian mata terpasang benar!', '🏷️');
+                    }
+                }
+            } else {
+                SoundFX.error();
+                zone.classList.add('border-rose-500', 'bg-rose-50');
+                setTimeout(() => zone.classList.remove('border-rose-500', 'bg-rose-50'), 600);
+                showToast('Ups, belum tepat! Coba perhatikan nomor dan fungsinya ya.', '🤔');
+            }
+        }
+
+        // --- MISI 3: MENGURUTKAN 3 CARA KERJA MATA ---
+        const correctEyeSteps = [
+            {
+                step: 1,
+                title: 'Cahaya Masuk Melalui Kornea & Pupil',
+                desc: 'Cahaya dari benda masuk melewati Kornea bening, lalu melewati lubang Pupil yang diatur besar kecilnya oleh Iris.',
+                icon: '☀️➡️👁️'
+            },
+            {
+                step: 2,
+                title: 'Lensa Memfokuskan Cahaya ke Retina',
+                desc: 'Lensa mata memfokuskan cahaya sehingga jatuh tepat di layar belakang (Retina) dan membentuk bayangan terbalik.',
+                icon: '🔍➡️🎯'
+            },
+            {
+                step: 3,
+                title: 'Saraf Optik Mengirim Pesan ke Otak',
+                desc: 'Saraf optik meneruskan sinyal gambar ke Otak, lalu otak membalikkan gambar sehingga benda terlihat tegak dan jelas.',
+                icon: '⚡➡️🧠'
+            }
+        ];
+        let currentM3Order = [];
+
+        function initMission3() {
+            document.getElementById('m3-feedback').classList.add('hidden');
+            currentM3Order = [...correctEyeSteps];
+            do {
+                currentM3Order.sort(() => Math.random() - 0.5);
+            } while (currentM3Order.every((item, idx) => item.step === idx + 1));
+            renderMission3();
+        }
+
+        function renderMission3() {
+            const container = document.getElementById('m3-steps-container');
+            container.innerHTML = '';
+
+            currentM3Order.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white border-2 border-purple-300 rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3';
+                card.innerHTML = `
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-purple-600 text-white font-display font-bold text-lg flex items-center justify-center shrink-0">
+                            ${index + 1}
+                        </div>
+                        <div>
+                            <div class="font-display font-bold text-base sm:text-lg text-slate-800">${item.icon} ${item.title}</div>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-0.5">${item.desc}</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1.5 shrink-0">
+                        <button type="button" onclick="moveM3Step(${index}, -1)" ${index === 0 ? 'disabled' : ''} class="px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 disabled:opacity-30 font-bold text-purple-900 text-xs">
+                            ⬆️ Naik
+                        </button>
+                        <button type="button" onclick="moveM3Step(${index}, 1)" ${index === currentM3Order.length - 1 ? 'disabled' : ''} class="px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 disabled:opacity-30 font-bold text-purple-900 text-xs">
+                            ⬇️ Turun
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function moveM3Step(index, dir) {
+            const targetIdx = index + dir;
+            if (targetIdx < 0 || targetIdx >= currentM3Order.length) return;
+            SoundFX.click();
+            [currentM3Order[index], currentM3Order[targetIdx]] = [currentM3Order[targetIdx], currentM3Order[index]];
+            renderMission3();
+        }
+
+        function checkMission3() {
+            const isCorrect = currentM3Order.every((item, idx) => item.step === idx + 1);
+            const fb = document.getElementById('m3-feedback');
+            fb.classList.remove('hidden');
+
+            if (isCorrect) {
+                SoundFX.win();
+                launchConfetti();
+                fb.className = 'text-center p-4 rounded-2xl max-w-xl w-full font-bold text-sm sm:text-base bg-emerald-100 text-emerald-900 border-2 border-emerald-400';
+                fb.innerHTML = '🎉 Hebat Sekali! Urutan 3 Cara Kerja Mata sudah tepat: <strong>1. Cahaya Masuk ➔ 2. Difokuskan ke Retina ➔ 3. Dikirim ke Otak!</strong>';
+                document.getElementById('m3-badge').textContent = '✅';
+                if (!state.m3Done) {
+                    state.m3Done = true;
+                    addStars(15);
+                    showToast('Selamat! Semua 3 Misi Selesai! +15 Bintang!', '🏆');
+                }
+            } else {
+                SoundFX.error();
+                fb.className = 'text-center p-4 rounded-2xl max-w-xl w-full font-bold text-sm sm:text-base bg-rose-100 text-rose-900 border-2 border-rose-400';
+                fb.innerHTML = '🤔 Urutannya belum pas! Ingat ya: Cahaya harus <strong>masuk dulu</strong> lewat kornea & pupil, lalu difokuskan ke retina, terakhir baru dikirim ke otak.';
+            }
+        }
+
+        // ==========================================
+        // 7. KUIS EVALUASI (8 SOAL)
+        // ==========================================
+        const quizQuestions = [
+            {
+                q: 'Bagian mata paling depan yang bening dan berfungsi meneruskan cahaya masuk ke mata disebut...',
+                options: ['Retina', 'Kornea', 'Saraf Optik', 'Alis'],
+                answer: 1,
+                exp: 'Tepat! Kornea adalah selaput bening di paling depan mata yang meneruskan cahaya masuk.'
+            },
+            {
+                q: 'Saat kita berada di ruangan yang sangat gelap, ukuran lubang Pupil akan...',
+                options: ['Membesar agar lebih banyak cahaya masuk', 'Mengecil agar tidak silau', 'Menghilang sementara', 'Berubah warna menjadi merah'],
+                answer: 0,
+                exp: 'Benar! Pupil membesar di tempat gelap supaya cahaya yang masuk lebih banyak.'
+            },
+            {
+                q: 'Bagian mata yang memberi warna indah pada mata (hitam, cokelat, atau biru) dan mengatur ukuran pupil adalah...',
+                options: ['Lensa mata', 'Kelopak mata', 'Iris', 'Retina'],
+                answer: 2,
+                exp: 'Betul sekali! Iris adalah selaput pelangi yang memberi warna mata dan mengatur besar kecilnya pupil.'
+            },
+            {
+                q: 'Bayangan benda yang ditangkap oleh layar Retina di bagian belakang mata berbentuk...',
+                options: ['Lebih besar dari aslinya', 'Terbalik', 'Mirip lingkaran', 'Berwarna hitam putih saja'],
+                answer: 1,
+                exp: 'Pintar! Bayangan yang jatuh di retina berbentuk terbalik, lalu otak yang membalikkannya menjadi tegak.'
+            },
+            {
+                q: 'Bagian mata yang berfungsi mengumpulkan dan memfokuskan cahaya agar jatuh tepat di retina adalah...',
+                options: ['Bulu mata', 'Lensa mata', 'Alis mata', 'Kelopak mata'],
+                answer: 1,
+                exp: 'Hebat! Lensa mata bertugas memfokuskan cahaya agar jatuh tepat pada retina.'
+            },
+            {
+                q: 'Siapakah yang bertugas membawa pesan gambar dari retina menuju ke otak?',
+                options: ['Kornea', 'Pupil', 'Saraf Optik', 'Iris'],
+                answer: 2,
+                exp: 'Tepat! Saraf optik menghubungkan retina dengan otak kita.'
+            },
+            {
+                q: 'Manakah urutan cara kerja mata yang benar saat kita melihat sebuah buku?',
+                options: [
+                    'Otak ➔ Retina ➔ Lensa ➔ Kornea',
+                    'Cahaya dari buku ➔ Kornea & Pupil ➔ Lensa & Retina ➔ Saraf Optik & Otak',
+                    'Retina ➔ Pupil ➔ Otak ➔ Cahaya',
+                    'Saraf Optik ➔ Lensa ➔ Kornea ➔ Otak'
+                ],
+                answer: 1,
+                exp: 'Luar biasa! Cahaya masuk dari depan (Kornea & Pupil), difokuskan (Lensa ke Retina), lalu dikirim ke Otak lewat Saraf Optik.'
+            },
+            {
+                q: 'Kebiasaan baik berikut ini yang dapat menjaga kesehatan mata kita adalah...',
+                options: [
+                    'Membaca buku sambil tiduran di tempat gelap',
+                    'Menatap layar HP terlalu dekat berjam-jam',
+                    'Membaca di tempat yang cukup terang dengan jarak sekitar 30 cm',
+                    'Mengucek mata dengan tangan yang kotor'
+                ],
+                answer: 2,
+                exp: 'Bagus sekali! Membaca di tempat terang dengan jarak sekitar 30 cm membuat mata tetap sehat dan tidak cepat lelah.'
+            }
+        ];
+
+        let currentQuizIdx = 0;
+        let quizScore = 0;
+        let quizAnswered = false;
+
+        function renderQuizQuestion() {
+            quizAnswered = false;
+            const item = quizQuestions[currentQuizIdx];
+            document.getElementById('quiz-progress-badge').textContent = `Soal ${currentQuizIdx + 1} / ${quizQuestions.length}`;
+            document.getElementById('quiz-bar').style.width = `${((currentQuizIdx + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-q-text').textContent = `${currentQuizIdx + 1}. ${item.q}`;
+
+            const expBox = document.getElementById('quiz-explanation');
+            expBox.classList.add('hidden');
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+
+            const optContainer = document.getElementById('quiz-options');
+            optContainer.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+
+            item.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'quiz-opt-btn w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-sky-400 hover:bg-sky-50 font-bold text-slate-700 text-sm sm:text-base transition flex items-center gap-3';
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-display flex items-center justify-center shrink-0">${letters[idx]}</span>
+                    <span>${optText}</span>
+                `;
+                btn.onclick = () => selectQuizAnswer(idx, btn);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizAnswer(selectedIdx, btnEl) {
+            if (quizAnswered) return;
+            quizAnswered = true;
+            const item = quizQuestions[currentQuizIdx];
+            const allBtns = document.querySelectorAll('.quiz-opt-btn');
+            const expBox = document.getElementById('quiz-explanation');
+
+            allBtns.forEach((b, i) => {
+                b.disabled = true;
+                if (i === item.answer) {
+                    b.classList.remove('border-slate-200');
+                    b.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                }
+            });
+
+            if (selectedIdx === item.answer) {
+                SoundFX.success();
+                quizScore++;
+                expBox.className = 'p-4 rounded-2xl text-sm sm:text-base font-semibold bg-emerald-100 text-emerald-900 border border-emerald-300';
+                expBox.innerHTML = `✅ <strong>Benar!</strong> ${item.exp}`;
+            } else {
+                SoundFX.error();
+                btnEl.classList.remove('border-slate-200');
+                btnEl.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+                expBox.className = 'p-4 rounded-2xl text-sm sm:text-base font-semibold bg-rose-100 text-rose-900 border border-rose-300';
+                expBox.innerHTML = `❌ <strong>Kurang tepat!</strong> ${item.exp}`;
+            }
+
+            expBox.classList.remove('hidden');
+            const nextBtn = document.getElementById('btn-next-quiz');
+            nextBtn.classList.remove('hidden');
+            nextBtn.textContent = currentQuizIdx === quizQuestions.length - 1 ? 'Lihat Nilai Akhir 🏆' : 'Soal Berikutnya ➡️';
+        }
+
+        function nextQuizQuestion() {
+            SoundFX.click();
+            if (currentQuizIdx < quizQuestions.length - 1) {
+                currentQuizIdx++;
+                renderQuizQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-question-box').classList.add('hidden');
+            document.getElementById('quiz-result-box').classList.remove('hidden');
+
+            const finalScore = Math.round((quizScore / quizQuestions.length) * 100);
+            document.getElementById('quiz-final-score').textContent = finalScore;
+
+            let starsText = '⭐';
+            let msg = 'Terus semangat belajar ya! Kamu bisa membaca materi lagi dan mencoba ulang.';
+            if (finalScore >= 85) {
+                starsText = '⭐⭐⭐';
+                msg = 'Luar Biasa! Kamu benar-benar ahli tentang bagian dan cara kerja mata!';
+                SoundFX.win();
+                launchConfetti();
+            } else if (finalScore >= 60) {
+                starsText = '⭐⭐';
+                msg = 'Bagus Sekali! Pemahamanmu sudah sangat baik!';
+                SoundFX.success();
+            }
+
+            document.getElementById('quiz-stars-display').textContent = starsText;
+            document.getElementById('quiz-final-msg').textContent = `${msg} (Benar ${quizScore} dari ${quizQuestions.length} soal)`;
+
+            if (!state.quizDone) {
+                state.quizDone = true;
+                addStars(quizScore * 5);
+            }
+        }
+
+        function restartQuiz() {
+            SoundFX.click();
+            currentQuizIdx = 0;
+            quizScore = 0;
+            document.getElementById('quiz-result-box').classList.add('hidden');
+            document.getElementById('quiz-question-box').classList.remove('hidden');
+            renderQuizQuestion();
+        }
+
+        // ==========================================
+        // 8. REFLEKSI & SERTIFIKAT
+        // ==========================================
+        function selectMood(moodText) {
+            SoundFX.click();
+            state.mood = moodText;
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                if (btn.textContent.trim().includes(moodText.split(' ')[0])) {
+                    btn.classList.add('border-indigo-500', 'bg-indigo-50');
+                    btn.classList.remove('border-slate-200', 'bg-white');
+                } else {
+                    btn.classList.remove('border-indigo-500', 'bg-indigo-50');
+                    btn.classList.add('border-slate-200', 'bg-white');
+                }
+            });
+            updateReflectionCard();
+        }
+
+        function updateReflectionCard() {
+            const nameVal = document.getElementById('student-name').value.trim();
+            const noteVal = document.getElementById('reflection-note').value.trim();
+            document.getElementById('cert-name').textContent = nameVal || 'Siswa Hebat Kelas 3 SD';
+            document.getElementById('cert-mood').textContent = state.mood;
+            document.getElementById('cert-stars').textContent = state.stars;
+            document.getElementById('cert-note').textContent = noteVal ? `"${noteVal}"` : '"Mata adalah anugerah Tuhan yang harus dijaga!"';
+        }
+
+        function copyReflectionSummary() {
+            SoundFX.success();
+            const name = document.getElementById('student-name').value.trim() || 'Siswa Kelas 3 SD';
+            const note = document.getElementById('reflection-note').value.trim() || 'Mengenal bagian-bagian dan cara kerja mata manusia.';
+            const habits = Array.from(document.querySelectorAll('.habit-check:checked')).map(cb => '- ' + cb.value).join('\n');
+
+            const summary = `🏅 SERTIFIKAT & REFLEKSI BELAJAR IPA KELAS 3 SD\n` +
+                `Materi: Mengenal & Memahami Mata Manusia\n` +
+                `Nama Siswa: ${name}\n` +
+                `Perasaan Belajar: ${state.mood}\n` +
+                `Total Bintang: ${state.stars} Bintang\n` +
+                `Hal Baru yang Dipelajari: ${note}\n` +
+                `Janji Menjaga Mata:\n${habits || '- Selalu menjaga kesehatan mata'}`;
+
+            // Gunakan textarea sementara + execCommand('copy') agar aman di dalam iframe
+            const temp = document.createElement('textarea');
+            temp.value = summary;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                showToast('Hasil refleksi berhasil disalin! Siap ditempel di pesan untuk Guru.', '📋');
+            } catch (err) {
+                showToast('Silakan tangkap layar (screenshot) kartu sertifikatmu!', '📸');
+            }
+            document.body.removeChild(temp);
+        }
+
+        // ==========================================
+        // 9. INISIALISASI SAAT HALAMAN DIMUAT
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            navigateTo('beranda');
+            selectEyePart('kornea');
+            updatePupilSimulation(50);
+            initPuzzle();
+            setupDropZones();
+            initDragDropMission();
+            initMission3();
+            renderQuizQuestion();
+            updateReflectionCard();
+        });
+    </script>
+</body>
+</html>
